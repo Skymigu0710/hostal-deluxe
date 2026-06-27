@@ -18,20 +18,20 @@ export default function ProductoFila({ producto, onEditar, onEliminar, onCambiar
   const bajoDe = producto.stock <= producto.stockMinimo;
 
   return (
-    <tr className="border-b border bg-[#FAF9F6] text-slate-100 hover:bg-[#E2E8F0]  transition-colors group">
-      {/* Nombre */}
+    <tr className="border-b border-slate-200 bg-[#FFFFFF] text-slate-100 hover:bg-[#E2E8F0]  transition-colors group">
+
       <td className="py-4 px-6 text-slate-600">
         <span className="font-semibold text-sm">{producto.nombre}</span>
       </td>
 
-      {/* Categoría */}
+   
       <td className="py-4 px-6">
         <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${CATEGORIA_COLOR[producto.categoria]}`}>
           {producto.categoria}
         </span>
       </td>
 
-      {/* Stock — editable inline */}
+   
       <td className="py-4 px-6">
         <div className="flex items-center gap-2">
           <button
@@ -58,12 +58,12 @@ export default function ProductoFila({ producto, onEditar, onEliminar, onCambiar
         </div>
       </td>
 
-      {/* Precio */}
+
       <td className="py-4 px-6">
         <span className="text-slate-600 text-sm">S/ {producto.precioVenta.toFixed(2)}</span>
       </td>
 
-      {/* Acciones */}
+   
       <td className="py-4 px-6">
         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button

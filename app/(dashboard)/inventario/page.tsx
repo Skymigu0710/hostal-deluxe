@@ -62,29 +62,35 @@ export default function Inventario() {
                 </header>
 
                 <div className="px-6 md:px-10 py-6 flex-1">
+                    <div className="bg-[#FFFFFF] border border-slate-200 rounded-2xl p-5 mb-5 shadow-xl">
+                        {/* Filtros */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <div>
+                                <label className=" text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">
+                                    Productos
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar producto..."
+                                    value={busqueda}
+                                    onChange={(e) => setBusqueda(e.target.value)}
+                                    className="w-full pl-9 pr-4 py-2 bg-[#F2F4F7] border border-slate-200 rounded-xl text-[#4A4A4A]  focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-sm"
+                                />
+                            </div>
+                            <SelectCustom
+                                label="Categoría"
+                                value={filtroCategoria}
+                                onChange={setFiltroCategoria}
+                                opciones={[
+                                    { label: "Todas las Categorías", value: "todas" },
+                                    { label: "Bebidas", value: "bebida" },
+                                    { label: "Snacks", value: "snack" },
+                                    { label: "Piqueos", value: "piqueo" },
+                                ]}
+                            />
 
-                    {/* Filtros */}
-                    <div className="flex flex-col sm:flex-row gap-3 mb-6 ">
-                        <input
-                            type="text"
-                            placeholder="Buscar producto..."
-                            value={busqueda}
-                            onChange={(e) => setBusqueda(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 bg-[#F2F4F7] border border-slate-200 rounded-xl text-[#4A4A4A]  focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-sm"
-                        />
 
-                        <SelectCustom
-                            label="Categoría"
-                            value={filtroCategoria}
-                            onChange={setFiltroCategoria}
-                            opciones={[
-                                { label: "Todas las Categorías", value: "todas" },
-                                { label: "Bebidas", value: "bebida" },
-                                { label: "Snacks", value: "snack" },
-                                { label: "Piqueos", value: "piqueo" },
-                            ]}
-                        />
-
+                        </div>
 
                     </div>
 

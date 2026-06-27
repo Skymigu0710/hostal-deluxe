@@ -26,7 +26,7 @@ export default function SelectCustom({ label, value, onChange, opciones }: Props
 
   return (
     <div ref={ref} className="relative">
-      <label className="block text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">
+      <label className=" text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">
         {label}
       </label>
 

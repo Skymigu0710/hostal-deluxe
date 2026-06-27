@@ -14,6 +14,42 @@ export default function Sidebar({ currentSection = 'registros' }: SidebarProps) 
 
   const menuItems = [
     {
+      id: 'CheckIn',
+      label: 'Check In',
+      href: '/checkIn',
+      icon: (
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M10 17l5-5m0 0l-5-5m5 5H3"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21V3"
+          />
+        </svg>
+      ),
+    },
+    {
+      id: 'ventas',
+      label: 'Ventas',
+      href: '/ventas',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+    },
+    {
       id: 'registros',
       label: 'Registros',
       href: '/registros',
@@ -23,13 +59,23 @@ export default function Sidebar({ currentSection = 'registros' }: SidebarProps) 
         </svg>
       ),
     },
-       {
-      id: 'CheckIn',
-      label: 'Check In',
-      href: '/checkIn',
+    {
+      id: 'inventario',
+      label: 'Inventario',
+      href: '/inventario',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"
+          />
         </svg>
       ),
     },
@@ -42,7 +88,7 @@ export default function Sidebar({ currentSection = 'registros' }: SidebarProps) 
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       ),
-  
+
       badge: 'Próximamente',
     },
     {
@@ -55,16 +101,7 @@ export default function Sidebar({ currentSection = 'registros' }: SidebarProps) 
         </svg>
       ),
     },
-    {
-      id: 'inventario',
-      label: 'Inventario',
-      href: '/inventario',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-      ),
-    },
+
   ];
 
   return (
@@ -104,9 +141,8 @@ export default function Sidebar({ currentSection = 'registros' }: SidebarProps) 
 
       {/* Contenedor del Sidebar */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-[#06457F] border-r border-slate-800/80 flex flex-col justify-between transform transition-transform duration-300 ease-in-out md:translate-x-0 md:sticky md:h-screen ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-[#06457F] border-r border-slate-800/80 flex flex-col justify-between transform transition-transform duration-300 ease-in-out md:translate-x-0 md:sticky md:h-screen ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {/* Cabecera / Branding */}
         <div>
@@ -124,17 +160,16 @@ export default function Sidebar({ currentSection = 'registros' }: SidebarProps) 
           {/* Menú de Navegación */}
           <nav className="p-4 space-y-1.5">
             {menuItems.map((item) => {
-               const isItemActive = pathname === item.href;
+              const isItemActive = pathname === item.href;
               return (
                 <Link
                   key={item.id}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
-                    isItemActive
-                      ? 'bg-gradient-to-r from-[#262B40]/15 to-[#FAF9F6]/5 border-l-4 border-[#FAF9F6] text-[#FAF9F6] font-semibold'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
-                  }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${isItemActive
+                    ? 'bg-gradient-to-r from-[#262B40]/15 to-[#FAF9F6]/5 border-l-4 border-[#FAF9F6] text-[#FAF9F6] font-semibold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+                    }`}
                 >
                   <div className="flex items-center space-x-3">
                     <span className={isItemActive ? 'text-[#FAF9F6]' : 'text-slate-500 group-hover:text-slate-300'}>

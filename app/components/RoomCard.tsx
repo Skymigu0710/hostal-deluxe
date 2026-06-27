@@ -17,7 +17,7 @@ export default function RoomCard({ room, onExtra, onCancelar }: ModalExtraProps)
 
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow duration-200 overflow-hidden">
+    <div className="bg-[#FFFFFF] rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow duration-200 overflow-hidden">
       {/* franja superior de color por estado */}
       <div
         className={`h-1 w-full ${room.estado === "ocupada" ? "bg-emerald-400" : "bg-amber-400"

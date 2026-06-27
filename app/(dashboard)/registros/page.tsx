@@ -232,7 +232,7 @@ export default function RegistrosPage() {
                     ) : (
                         <>
                             {/* Escritorio: Tabla */}
-                            <div className="hidden lg:block bg-[#F2F4F7] border  rounded-2xl overflow-hidden shadow-xl">
+                            <div className="hidden lg:block bg-[#FFFFFF] border  rounded-2xl overflow-hidden shadow-xl">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
                                         <tr className="border-b border-slate-900 bg-[#06457F]  text-[#FAF9F6] font-semibold text-xs tracking-wider uppercase">
