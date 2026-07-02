@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ export default function LoginPage() {
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,49 +24,40 @@ export default function LoginPage() {
         setIsLoading(true);
 
         try {
-            // Simulación de petición de autenticación
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            const res = await fetch('/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: email, password }),
+            });
 
-            console.log('Login exitoso:', { email, rememberMe });
-            // Aquí se redireccionaría o guardaría el token
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Credenciales incorrectas');
+            }
+
+            console.log('Usuario:', data.usuario); // { username: "admin", role: "ADMIN", message: "Login exitoso" }
+            router.push('/checkIn');
         } catch (err) {
-            setError('Credenciales incorrectas. Intenta de nuevo.');
+            setError(err instanceof Error ? err.message : 'Credenciales incorrectas. Intenta de nuevo.');
         } finally {
             setIsLoading(false);
         }
     };
-
     return (
-        <div className="flex min-h-screen bg-[#00072D] text-slate-100 font-[Inter] antialiased overflow-hidden">
+        <div className="flex min-h-screen bg-[#06457F] text-slate-100 font-[Inter] antialiased overflow-hidden">
             {/* SECCIÓN IZQUIERDA: Formulario de Login */}
-            <div className="flex flex-col justify-between w-full md:w-[45%] lg:w-[40%] xl:w-[35%] p-8 sm:p-12 md:p-16 bg-[#00072D] z-10 shadow-2xl">
+            <div className="flex flex-col justify-between w-full md:w-[45%] lg:w-[40%] xl:w-[35%] p-8 sm:p-12 md:p-16 bg-[#FAF9F6] z-10 shadow-2xl">
                 {/* Logo / Encabezado superior */}
                 <div className="flex items-center space-x-3 mb-8 md:mb-0">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-cyan-400 shadow-lg shadow-blue-500/30">
-                        <svg
-                            className="w-6 h-6 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                            />
-                        </svg>
-                    </div>
-                    <span className="text-xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                        SISTEMA DE ACCESO
+                    <span className="text-xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-slate-100 to-slate-800 ">
+                        +++++ SISTEMA DE ACCESO
                     </span>
                 </div>
-
                 {/* Contenedor del Formulario */}
                 <div className="w-full max-w-md mx-auto my-auto py-8">
                     <div className="mb-8">
-                        <h1 className="text-3xl font-extrabold text-white tracking-tight mb-2">
+                        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">
                             ¡Bienvenido de nuevo!
                         </h1>
                         <p className="text-slate-400 text-sm">
@@ -94,12 +87,12 @@ export default function LoginPage() {
                                 </div>
                                 <input
                                     id="email"
-                                    type="email"
+                                    type="text"
                                     required
                                     placeholder="usuario@gmail.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-11 pr-4 py-3 bg-[#000a35] border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                                    className="w-full pl-11 pr-4 py-3 bg-[#F2F4F7] border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                                 />
                             </div>
                         </div>
@@ -111,7 +104,7 @@ export default function LoginPage() {
                                 <a
                                     href="#forgot"
                                     onClick={(e) => e.preventDefault()}
-                                    className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                                    className="text-xs text-[#06457F] hover:text-blue-300 font-medium transition-colors"
                                 >
                                     ¿Olvidaste tu contraseña?
                                 </a>
@@ -129,7 +122,7 @@ export default function LoginPage() {
                                     placeholder="••••••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-11 pr-12 py-3 bg-[#000a35] border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                                    className="w-full pl-11 pr-12 py-3 bg-[#F2F4F7] border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                                 />
                                 <button
                                     type="button"
@@ -159,7 +152,7 @@ export default function LoginPage() {
                                 onChange={(e) => setRememberMe(e.target.checked)}
                                 className="w-4 h-4 rounded border-slate-700 bg-[#000a35] text-blue-600 focus:ring-blue-500/20 focus:ring-offset-0 focus:ring-2"
                             />
-                            <label htmlFor="remember" className="ml-2 block text-sm text-slate-300 select-none cursor-pointer">
+                            <label htmlFor="remember" className="ml-2 block text-sm text-slate-400 select-none cursor-pointer">
                                 Mantener sesión iniciada
                             </label>
                         </div>
@@ -168,7 +161,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="relative w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center overflow-hidden"
+                            className="relative w-full py-3.5 px-4 bg-[#06457F] hover:bg-[#262B40] cursor-pointer rounded-xl shadow-lg shadow-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center overflow-hidden"
                         >
                             {isLoading ? (
                                 <div className="flex items-center space-x-2">
@@ -205,7 +198,7 @@ export default function LoginPage() {
                 />
 
                 {/* Degradado/Overlay para fundir la imagen con la sección izquierda */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#00072D] via-[#00072D]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#06457F] via-[#00072D]/50 to-transparent" />
 
                 {/* Efecto de luz de fondo */}
                 <div className="absolute -top-1/4 -right-1/4 w-[600px] h-[600px] rounded-full bg-blue-500/10 blur-[120px]" />

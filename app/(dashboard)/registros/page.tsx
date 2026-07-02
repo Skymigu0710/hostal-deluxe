@@ -5,61 +5,18 @@ import Sidebar from '../../components/Sidebar'; // Ajusta la ruta relativa segú
 import SelectCustom from "@/app/components/SelectCustom";
 import { Room } from "@/app/types/room";
 import EditRegistry from "@/app/components/modals/EditRegistry";
+import { useEstadias } from "@/app/hooks/useEstadias";
 
-const REGISTROS_INICIALES: Room[] = [
-    {
-        id: 'reg-1',
-        habitacion: '101',
-        clientes: 'Juan Pérez',
-        dni: '12345678',
-        horaEntrada: '08:30',
-        turno: 'Día',
-        estado: 'ocupada',
-        monto: 80,
-        tipoPago: 'Efectivo',
-        notas: 'Ninguna',
-        duracion: 2.5,
-        tiempoActivo: '2:40',
-        fecha: new Date().toISOString().split('T')[0],
-        montoExtra: 0,
-    },
-    {
-      id: 'reg-2',
-        habitacion: '102',
-        clientes: 'Juan Pérez',
-        dni: '12345678',
-        horaEntrada: '08:30',
-        turno: 'Día',
-        estado: 'ocupada',
-        monto: 80,
-        tipoPago: 'Efectivo',
-        notas: 'Ninguna',
-        duracion: 2.5,
-        tiempoActivo: '2:40',
-        fecha: new Date().toISOString().split('T')[0],
-        montoExtra: 0,
-    },
-    {
-        id: 'reg-3',
-        habitacion: '103',
-        clientes: 'Juan Pérez',
-        dni: '12345678',
-        horaEntrada: '08:30',
-        turno: 'Día',
-        estado: 'ocupada',
-        monto: 80,
-        tipoPago: 'Efectivo',
-        notas: 'Ninguna',
-        duracion: 2.5,
-        tiempoActivo: '2:40',
-        fecha: new Date().toISOString().split('T')[0],
-         montoExtra: 0,
-    },
-];
 
 export default function RegistrosPage() {
-    const [registros, setRegistros] = useState<Room[]>(REGISTROS_INICIALES);
-    const HABITACIONES = ['101', '102', '103', '201', '202', '203'];
+    const { data: registrosBackend, isLoading } = useEstadias();
+    const [registros, setRegistros] = useState<Room[]>([]);
+
+    useEffect(() => {
+        if (registrosBackend) {
+            setRegistros(registrosBackend);
+        }
+    }, [registrosBackend]);
 
     // Filtros
     const [filtroFecha, setFiltroFecha] = useState<string>('');
@@ -97,29 +54,6 @@ export default function RegistrosPage() {
     };
 
     const handleCloseEditModal = () => {
-        setIsEditModalOpen(false);
-        setSelectedRegistro(null);
-    };
-
-    const handleSaveEdit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!selectedRegistro || !editNombre || !editDni || editMonto === '') return;
-
-        setRegistros((prev) =>
-            prev.map((reg) =>
-                reg.id === selectedRegistro.id
-                    ? {
-                        ...reg,
-                        habitacion: editHabitacion,
-                        clientes: editNombre,
-                        dni: editDni.trim(),
-                        monto: Number(editMonto),
-                        tipoPago: editTipoPago,
-                    }
-                    : reg
-            )
-        );
-
         setIsEditModalOpen(false);
         setSelectedRegistro(null);
     };
@@ -177,8 +111,9 @@ export default function RegistrosPage() {
                                 onChange={setFiltroTurno}
                                 opciones={[
                                     { label: "Todos los Turnos", value: "Todos" },
-                                    { label: "Día", value: "Día" },
-                                    { label: "Noche", value: "Noche" },
+                                    { label: "Matutino", value: "MATUTINO" },
+                                    { label: "Vespertino", value: "VESPERTINO" },
+                                    { label: "Nocturno", value: "NOCTURNO" },
                                 ]}
                             />
 
@@ -188,11 +123,9 @@ export default function RegistrosPage() {
                                 onChange={setFiltroEstado}
                                 opciones={[
                                     { label: "Todos los Estados", value: "Todos" },
-                                    { label: "Ocupada", value: "ocupada" },
-                                    { label: "En Limpieza", value: "limpieza" },
-                                    { label: "Mantenimiento", value: "Mantenimiento" },
-                                    { label: "Disponible", value: "Disponible" },
-                                    { label: "Cancelado", value: "Cancelado" },
+                                    { label: "Activa", value: "ACTIVA" },
+                                    { label: "Finalizada", value: "FINALIZADA" },
+                                    { label: "Cancelada", value: "CANCELADA" },
                                 ]}
                             />
                             <div className="lg:col-span-2">
@@ -263,7 +196,9 @@ export default function RegistrosPage() {
                                                 <td className="py-4 px-6 text-slate-600">{reg.dni}</td>
                                                 <td className="py-4 px-6 text-slate-600 font-mono">{reg.horaEntrada}</td>
                                                 <td className="py-4 px-6">
-                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${reg.turno === 'Día' ? 'bg-amber-500/10 text-amber-400' : 'bg-indigo-500/10 text-indigo-400'
+                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${reg.turno === 'MATUTINO' ? 'bg-amber-500/10 text-amber-400' :
+                                                            reg.turno === 'VESPERTINO' ? 'bg-orange-500/10 text-orange-400' :
+                                                                'bg-indigo-500/10 text-indigo-400'
                                                         }`}>
                                                         {reg.turno}
                                                     </span>
@@ -273,9 +208,9 @@ export default function RegistrosPage() {
                                                     S/ {reg.monto.toFixed(2)}
                                                 </td>
                                                 <td className="py-4 px-6">
-                                                    <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-semibold ${reg.estado === 'ocupada' ? 'bg-green-500/15 text-green-400 border border-green-500/25' :
-                                                        reg.estado === 'reservada' ? 'bg-amber-500/15 text-amber-400 border border-amber-500/25' :
-                                                            reg.estado === 'cancelado' ? 'bg-red-500/15 text-red-400 border border-red-500/25' :
+                                                    <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-semibold ${reg.estado === 'ACTIVA' ? 'bg-green-500/15 text-green-400 border border-green-500/25' :
+                                                        reg.estado === 'FINALIZADA' ? 'bg-slate-500/15 text-slate-400 border border-slate-500/25' :
+                                                            reg.estado === 'CANCELADA' ? 'bg-red-500/15 text-red-400 border border-red-500/25' :
                                                                 'bg-slate-500/15 text-slate-400 border border-slate-500/25'
                                                         }`}>
                                                         {reg.estado}
@@ -295,65 +230,6 @@ export default function RegistrosPage() {
                                 </table>
                             </div>
 
-                            {/* Móvil: Tarjetas */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
-                                {registrosFiltrados.map((reg) => (
-                                    <div
-                                        key={reg.id}
-                                        className={`bg-[#00072D] border border-slate-800/80 rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4 hover:border-slate-700 transition-colors ${reg.estado === 'cancelado' ? 'opacity-60' : ''
-                                            }`}
-                                    >
-                                        <div className="flex justify-between items-start">
-                                            <span className="bg-[#C9A84C]/10 text-[#C9A84C] text-sm font-black px-3 py-1 rounded-xl border border-[#C9A84C]/15">
-                                                HAB. {reg.habitacion}
-                                            </span>
-                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${reg.estado === 'ocupada' ? 'bg-green-500/10 text-green-400' :
-                                                reg.estado === 'reservada' ? 'bg-amber-500/10 text-amber-400' :
-                                                 reg.estado === 'limpieza' ? 'bg-amber-500/10 text-amber-400' :
-                                                 reg.estado === 'mantenimiento' ? 'bg-amber-500/10 text-amber-400' :
-                                                    reg.estado === 'cancelado' ? 'bg-red-500/10 text-red-400' :
-                                                        reg.estado === 'disponible' ? 'bg-blue-500/10 text-blue-400' :
-                                                            'bg-slate-500/10 text-slate-400'
-                                                }`}>
-                                                {reg.estado}
-                                            </span>
-                                        </div>
-
-                                        <div>
-                                            <h4 className="text-base font-bold text-white">{reg.clientes}</h4>
-                                            <p className="text-xs text-slate-400 mt-1">DNI: {reg.dni}</p>
-
-                                            <div className="grid grid-cols-2 gap-2 mt-4 text-xs bg-[#000523]/40 p-3 rounded-xl border border-slate-800/40">
-                                                <div>
-                                                    <span className="text-slate-500 block">Llegada</span>
-                                                    <span className="text-white font-semibold font-mono">{reg.horaEntrada}</span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate-500 block">Turno</span>
-                                                    <span className="text-white font-semibold">{reg.turno}</span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate-500 block">Monto</span>
-                                                    <span className="text-[#C9A84C] font-bold font-mono">S/ {reg.monto.toFixed(2)}</span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-slate-500 block">Método</span>
-                                                    <span className="text-slate-300">{reg.tipoPago}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex justify-end pt-2 border-t border-slate-800/50">
-                                            <button
-                                                onClick={() => handleOpenEditModal(reg)}
-                                                className="px-4 py-2 w-full bg-slate-850 hover:bg-[#C9A84C]/20 text-slate-200 hover:text-[#C9A84C] font-bold text-xs rounded-xl transition-colors border border-slate-700"
-                                            >
-                                                Editar Registro
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </>
                     )}
                 </div>
