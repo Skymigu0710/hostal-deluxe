@@ -29,3 +29,8 @@ export interface EstadiaResponse {
   turnoId: number;
   turnoTipo: TipoTurno;
 }
+
+export interface CheckoutRequest {
+  estadiaId: number;
+  descuento?: number;
+}

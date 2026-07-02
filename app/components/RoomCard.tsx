@@ -76,13 +76,13 @@ export default function RoomCard({ room, onExtra, onCancelar }: ModalExtraProps)
         </div>
         {/* acciones */}
         <div className="flex gap-2">
-          <button className="flex-1 py-2 px-3 bg-gradient-to-r from-[#06457F] to-[#262B40] hover:to-[#06457F] text-white font-semibold text-xs rounded-xl transition-all duration-200 shadow-sm">
-            Finalizar estadía
-          </button>
           <button
             onClick={() => onCancelar(room)}
-            className="py-2 px-4 rounded-xl border cursor-pointer border-slate-200 bg-[#F2F4F7] text-slate-500 text-xs font-medium hover:bg-slate-200 transition-colors"
+            className="flex-1 py-2 px-3 bg-gradient-to-r from-[#06457F] to-[#262B40] hover:to-[#06457F] text-white font-semibold text-xs rounded-xl transition-all duration-200 shadow-sm cursor-pointer"
           >
+            Finalizar estadía  
+          </button>
+           <button className="py-2 px-4 rounded-xl border cursor-pointer border-slate-200 bg-[#F2F4F7] text-slate-500 text-xs font-medium hover:bg-slate-200 transition-colors">
             Cancelar
           </button>
           <button

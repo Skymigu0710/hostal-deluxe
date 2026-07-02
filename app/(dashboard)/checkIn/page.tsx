@@ -22,12 +22,23 @@ export default function RoomManagement() {
   const reservadas = rooms.filter(r => r.estado === "reservada");
 
 
-  /*CANCELAR REGISTRO (eliminar tarjeta)*/
- const handleCancelar = async (room: Room) => {
-  await fetch(`/api/v1/estadias/${room.id}/cancelar`, { method: 'PATCH' });
-  refetch(); // vuelve a pedir la lista actualizada
+const handleCheckout = async (room: Room) => {
+  try {
+    const res = await fetch('/api/v1/estadias/checkout', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ estadiaId: Number(room.id) }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || 'No se pudo hacer el checkout');
+    }
+    refetch(); // la habitación desaparece de "activas" porque pasa a FINALIZADA
+  } catch (err) {
+    console.error(err);
+    alert(err instanceof Error ? err.message : 'Error al hacer checkout');
+  }
 };
-
   /* muestra modal extra y actualiza monto*/
 const handleConfirmarExtra = (totalExtra: number) => {
   // ⚠️ TODO: falta endpoint/tabla en el backend para persistir montoExtra
@@ -60,8 +71,8 @@ return (
       </header>
       <div className="flex-1 px-6 md:px-10 py-8 max-w-7xl w-full mx-auto">
         {/* TARJETAS */}
-        <RoomSection title="Ocupadas" rooms={ocupadas} onExtra={setExtraRoom} onCancelar={handleCancelar} />
-        <RoomSection title="Reservas" rooms={reservadas} onExtra={setExtraRoom} onCancelar={handleCancelar} />
+        <RoomSection title="Ocupadas" rooms={ocupadas} onExtra={setExtraRoom} onCancelar={handleCheckout} />
+        <RoomSection title="Reservas" rooms={reservadas} onExtra={setExtraRoom} onCancelar={handleCheckout} />
       </div>
     </main>
     {/* MODAL NUEVO */}
